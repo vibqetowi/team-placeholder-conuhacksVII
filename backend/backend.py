@@ -41,8 +41,8 @@ class Password:
                 include_special_char: bool):
                 
 
-        # x,sr=a2n.audio_from_file("test.mp3")
-        # print(x)
+        x,sr=a2n.audio_from_file("./test.mp3")
+        print(x)
 
         # define characters used in password
         charset = []
@@ -55,7 +55,8 @@ class Password:
         Faker.seed(url)
 
         self.plaintext_password = str(f0.sentence(
-            ext_word_list=charset, nb_words = pwlen).replace(' ', ''))[:-1]
+                                    ext_word_list=charset, nb_words = pwlen*2).
+                                    replace(' ', ''))[:-1]
 
         self.entropy_bits = compute_bit_entropy(pwlen, len(set(self.plaintext_password)))
 
@@ -70,7 +71,7 @@ def compute_bit_entropy(string_length: int, charset_size:int)-> float:
     return math.log(charset_size**string_length,2)
 
 if __name__ == "__main__":
-    pw = Password("url", 32, True,True,True,True)
+    pw = Password("url", 99, True,True,True,True)
     print(pw.get_plaintext_password())
     print(pw.get_entropy())
 
