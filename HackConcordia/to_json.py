@@ -1,15 +1,15 @@
 import json
 from os import path
 
-username = ""
-url = ""
-password = ""
+username = "Cow"
+url = "https://github.com/vibqetowi/team-placeholder-conuhacksVII"
+password = "9888"
 
 if not all([username, url, password]):
     raise ValueError("One or more fields are empty.")
 
 data = [{"username": username, "url": url, "password": password}]
-filename = './creds.json'
+filename = './vault.json'
 
 # Check if file exists
 if path.isfile(filename) is False:
