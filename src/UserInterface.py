@@ -13,9 +13,11 @@ from src.backend.backend_code import *
 from src.to_json import *
 from src.server.qr_code import *
 from src.server.httpserver import *
+from src.qr_code_auth import *
 import pandas as pd
 import json
 import threading
+import socket
 
 
 
@@ -165,7 +167,6 @@ class Ui_Widget(object):
         print("website saved")
 
         self.provide_password_report(entropy)
-<<<<<<< HEAD
         self.addJsonToList()
 
     def addJsonToList(self):
@@ -183,9 +184,7 @@ class Ui_Widget(object):
             model.appendRow(item)
         self.gridLayout.addWidget(self.list_paswords, 1, 0, 1, 2)
         
-=======
 
->>>>>>> 79579f4bd8cb75128d8ce2dea2563a92ecffafb7
     # changes the text on generate password btn to educate
     # the user on the strength of the password
 
@@ -217,11 +216,27 @@ class Ui_Widget(object):
     #     cv2.imshow("QR", img)
     #     cv2.waitKey(0)
     def exportPasswords(self):
+        url = "http://"+str(self.getNetworkIp())+":80/download"
+        generate_qr(url)
+        img = cv2.imread("qr_code.png", cv2.IMREAD_ANYCOLOR)
+
+        cv2.imshow("QR", img)
+        cv2.waitKey(0)
+        print("img displayed")
+        cv2.destroyAllWindows()
+
         httpd = HTTPServer(('',80),MyHandler)
         stop_server = threading.Timer(60.0,httpd.shutdown)
         stop_server.start()
 
         httpd.serve_forever()
+        
+
+    def getNetworkIp(self):
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+        s.connect(('<broadcast>', 0))
+        return s.getsockname()[0]
 
     def retranslateUi(self, Widget):
         _translate = QtCore.QCoreApplication.translate
