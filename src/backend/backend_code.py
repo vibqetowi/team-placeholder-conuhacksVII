@@ -31,7 +31,8 @@ class User:
 
 # class Website contains all credentials of a particular website
 class Website:
-    # TODO: if duplicate url, do not create new password, but update password with new seed
+    # TODO: if duplicate url, do not create new password, but update password
+    # with new seed
 
     plaintext_password = None  # the actual password
     entropy_bits = None
@@ -61,13 +62,18 @@ class Website:
 # charset, length and a seed from the website url and randomness generated
 # from mic recording.
 
-    def set_password(self, pwlen: int, include_num: bool, include_lowercase: bool,
-                     include_uppercase: bool, include_special_char: bool):
+    def set_password(
+            self,
+            pwlen: int,
+            include_num: bool,
+            include_lowercase: bool,
+            include_uppercase: bool,
+            include_special_char: bool):
 
         def generate_password_seed() -> float:
 
             seed = hash(self.get_website_url) * \
-                hash_from_audio()*secrets.randbits(256)
+                hash_from_audio() * secrets.randbits(256)
             # print (seed)
             return seed
 
@@ -91,8 +97,14 @@ class Website:
         # compute seed from url and short clip captured by mic
         Faker.seed(generate_password_seed())
 
-        self.plaintext_password = str(f0.sentence(ext_word_list=charset,
-                                                  nb_words=pwlen*2).replace(' ', ''))[:pwlen]
+        self.plaintext_password = str(
+            f0.sentence(
+                ext_word_list=charset,
+                nb_words=pwlen *
+                2).replace(
+                ' ',
+                ''))[
+            :pwlen]
 
         self.entropy_bits = compute_bit_entropy(self.plaintext_password)
 
@@ -101,7 +113,7 @@ class Website:
 def compute_bit_entropy(password) -> float:
     charset_size = len(set(password))
     string_length = len(password)
-    
+
     return math.log(charset_size**string_length, 2)
 
 
@@ -109,7 +121,13 @@ def generate_username(url):
     # username generated using url as seed
     f0 = Faker()
     Faker.seed(url)
-    return str(f0.sentence(ext_word_list=lowercase_letters, nb_words=20).replace(' ', '').lower())[:8]
+    return str(
+        f0.sentence(
+            ext_word_list=lowercase_letters,
+            nb_words=20).replace(
+            ' ',
+            '').lower())[
+                :8]
 
 
 # Record audio for 0.5 seconds with microphone to numpy array, then
