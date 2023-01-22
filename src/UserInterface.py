@@ -154,6 +154,8 @@ class Ui_Widget(object):
         print("website saved")
 
         self.provide_password_report(entropy)
+        
+
 
     # changes the text on generate password btn to educate
     # the user on the strength of the password

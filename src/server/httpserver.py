@@ -19,8 +19,10 @@ class handler(http.server.SimpleHTTPRequestHandler):
 
 
 
-ip = socket.gethostbyname(socket.gethostname())
-print(ip)
+site = handler
+site.__init__
+
+
 
 
 

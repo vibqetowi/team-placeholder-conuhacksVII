@@ -1,0 +1,14 @@
+body {
+  background-color: #333333;
+  color: #ffffff;
+}
+
+input[type='password'], input[type='button']{
+  background-color: #666666;
+  color: #ffffff;
+}
+
+
+
+
+
