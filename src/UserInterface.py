@@ -112,23 +112,25 @@ class Ui_Widget(object):
 
     def genPassword(self, Widget):
 
+        self.input_username.setText('')
         url = self.input_URL.text()
-        jv = pd.read_json('vault.json')
-
-        print(jv.head())
 
         # ADD THE CODE GENERATIO CODE
         wb = Website(url, int(self.input_Compexity.text()), self.chkbx_nubers.isChecked(
         ), self.chkbx_Lowecase.isChecked(), self.chkbx_upercase.isChecked(), self.chkbx_specialChars.isChecked())
         us = User(self.input_masterPassword.text())
 
+        # update website username
         if not self.input_username.text():
-            self.input_username.setText(wb.get_website_username())
+            self.input_username.setText(generate_username(url))
+        wb.set_username(self.input_username.text())
 
-        # jv.write_data(self.input_username.text(),
-        #               self.input_URL.text(), wb.get_plaintext_password())
-        print("btn clicked")
         self.label_generatedPassword.setText(wb.get_plaintext_password())
+
+        jv = JSONVault('vault.json')
+        jv.write_data(self.input_username.text(), url,
+                      wb.get_plaintext_password())
+        print("website saved")
 
     def genQRCode(self, Widget):
         file_path = 'qr.png'

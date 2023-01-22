@@ -29,11 +29,7 @@ class User:
         self.master_password = master_password
 
 
-# class Password contains all credentials of a particular website
-# the Faker library is used to create a password from a specified
-# charset, length and a seed from the website url and randomness generated
-# from mic recording.
-# I should have named this website or something but no it is a bit late to refactor
+# class Website contains all credentials of a particular website
 class Website:
     # TODO: if duplicate url, do not create new password, but update password with new seed
 
@@ -48,34 +44,33 @@ class Website:
                  include_uppercase: bool,
                  include_special_char: bool):
 
-        self.website_url = url
-
-        # username generated using url as seed
-        f0 = Faker()
-        Faker.seed(url)
-        self.website_username = str(f0.sentence(
-            ext_word_list=lowercase_letters+uppercase_letters, nb_words=9).
-            replace(' ', ''))[:-1]
-
-        self.set_password (pwlen, include_num, include_lowercase,
-                            include_uppercase, include_special_char)
-
-
+        self.set_url(url)
+        self.website_username = generate_username(url)
+        self.set_password(pwlen, include_num, include_lowercase,
+                          include_uppercase, include_special_char)
 
     def get_plaintext_password(self): return self.plaintext_password
     def get_entropy(self): return self.entropy_bits
     def get_website_username(self): return self.website_username
     def get_website_url(self): return self.website_url
 
-    def generate_password_seed(self) -> float:
+    def set_username(self, username): self.website_username = username
 
-        seed = hash(self.get_website_url)*hash_from_audio()*secrets.randbits(256)
-        print (seed)
-        return seed
-
+    def set_url(self, url): self.website_url = url
+# the Faker library is used to create a password from a specified
+# charset, length and a seed from the website url and randomness generated
+# from mic recording.
 
     def set_password(self, pwlen: int, include_num: bool, include_lowercase: bool,
                      include_uppercase: bool, include_special_char: bool):
+
+        def generate_password_seed() -> float:
+
+            seed = hash(self.get_website_url) * \
+                hash_from_audio()*secrets.randbits(256)
+            # print (seed)
+            return seed
+
         # define characters used in password
         charset = []
         if include_lowercase:
@@ -91,17 +86,26 @@ class Website:
         f0 = Faker()
 
         # compute seed from url and short clip captured by mic
-        Faker.seed(self.generate_password_seed())
+        Faker.seed(generate_password_seed())
 
         self.plaintext_password = str(f0.sentence(ext_word_list=charset,
-                                    nb_words=pwlen*2).replace(' ', ''))[:pwlen]
+                                                  nb_words=pwlen*2).replace(' ', ''))[:pwlen]
 
-        self.entropy_bits = compute_bit_entropy(pwlen, len(set(self.plaintext_password)))
+        self.entropy_bits = compute_bit_entropy(
+            pwlen, len(set(self.plaintext_password)))
 
 
 # bits of entropy in string = log2(unique characters ^ length of string)
 def compute_bit_entropy(string_length: int, charset_size: int) -> float:
     return math.log(charset_size**string_length, 2)
+
+
+def generate_username(url):
+    # username generated using url as seed
+    f0 = Faker()
+    Faker.seed(url)
+    return str(f0.sentence(ext_word_list=lowercase_letters +
+                           uppercase_letters, nb_words=10). replace(' ', ''))[:-1]
 
 
 # Record audio for 0.5 seconds with microphone to numpy array, then
@@ -139,7 +143,7 @@ if __name__ == "__main__":
     wb = Website("url", 5, True, True, True, True)
     print(f'wb0: {wb.get_plaintext_password()} entropy: {wb.get_entropy()}')
 
-    wb.set_password(3,False,True,True,False)
+    wb.set_password(3, False, True, True, False)
     print(f'wb1: {wb.get_plaintext_password()} entropy: {wb.get_entropy()}')
 
 
