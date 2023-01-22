@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Input Form</title>
+  </head>
+  <body>
+    <form>
+      <label for="input">Enter the password:</label>
+      <input type="password" id="input" name="input">
+      <br><br>
+      <input type="button" value="Submit" onclick="submitForm()">
+    </form>
+    <script>
+      function submitForm() {
+        var input = document.getElementById("input").value;
+        var master_password = "<%= user.get_master_password() %>";
+        var input_password = hashlib.sha256(input.encode()).hexdigest();
+        if (input_password === master_password) {
+            alert("Access granted!");
+        } else {
+            alert("Access denied! Incorrect password.");
+        }
+      }
+    </script>
+  </body>
+</html>
