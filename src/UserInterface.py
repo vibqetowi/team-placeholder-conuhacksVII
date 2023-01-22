@@ -117,8 +117,12 @@ class Ui_Widget(object):
         master_password = self.input_masterPassword.text()
         print(compute_bit_entropy(master_password))
 
-        wb = Website(url, int(self.input_Length.text()), self.chkbx_nubers.isChecked(
-        ), self.chkbx_Lowecase.isChecked(), self.chkbx_upercase.isChecked(), self.chkbx_specialChars.isChecked())
+        wb = Website(url,
+                     int(self.input_Length.text()),
+                     self.chkbx_nubers.isChecked(),
+                     self.chkbx_Lowecase.isChecked(),
+                     self.chkbx_upercase.isChecked(),
+                     self.chkbx_specialChars.isChecked())
 
         # exception handling/ shaming the user when they make mistakes
         # I haven't slept ok, let me have some fun. Minh
@@ -154,15 +158,16 @@ class Ui_Widget(object):
         print("website saved")
 
         self.provide_password_report(entropy)
-        
-
 
     # changes the text on generate password btn to educate
     # the user on the strength of the password
+
     def provide_password_report(self, entropy):
 
         password_strength = ''
-        if entropy < 60:
+        if entropy < 30: 
+            password_strength = 'unacceptable'
+        elif entropy < 50:
             password_strength = 'weak'
         elif entropy < 100:
             password_strength = 'medium'
@@ -205,7 +210,8 @@ class Ui_Widget(object):
             _translate("Widget", "Generate Password"))
 
         # self.btn_generateQR.setText(_translate("Widget", "Generate QR"))
-        self.btn_TransferPasswords.setText(_translate("Widget", "Export Vault"))
+        self.btn_TransferPasswords.setText(
+            _translate("Widget", "Export Vault"))
 
 
 def main():

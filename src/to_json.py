@@ -2,14 +2,19 @@ import json
 from os import path
 from cryptography.fernet import Fernet
 
+
 class JSONVault:
     def __init__(self, filename):
         self.filename = filename
 
-    def write_data(self, username, url, password,entropy):
+    def write_data(self, username, url, password, entropy):
         if not all([username, url, password]):
             raise ValueError("One or more fields are empty.")
-        data = {"username": username, "url": url, "password": password, 'password_entropy': entropy}
+        data = {
+            "username": username,
+            "url": url,
+            "password": password,
+            'password_entropy': entropy}
         # Check if file exists
         if path.isfile(self.filename) is False:
             # Create a new JSON file with the data
@@ -23,13 +28,14 @@ class JSONVault:
             with open(self.filename) as fp:
                 existing_data = json.load(fp)
                 fp.close()
-            # iterate to see if duplicate url and if found update username and pw
+            # iterate to see if duplicate url and if found update username and
+            # pw
             flag = False
             for item in existing_data:
                 if item['url'] == data['url']:
                     item['password'] = data['password']
                     item['username'] = data['username']
-                    item ['password_entropy'] = data['password_entropy']
+                    item['password_entropy'] = data['password_entropy']
                     with open(self.filename, 'w') as json_file:
                         json.dump(existing_data, json_file, indent=4)
                     print("JSON if")
