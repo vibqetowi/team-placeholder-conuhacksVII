@@ -18,7 +18,7 @@ import pandas as pd
 class Ui_Widget(object):
     def setupUi(self, Widget):
         Widget.setObjectName("Widget")
-        Widget.resize(684, 301)
+        Widget.resize(700, 333)
 
         self.input_URL = QtWidgets.QLineEdit(Widget)
         self.input_URL.setGeometry(QtCore.QRect(110, 10, 291, 22))
@@ -39,8 +39,9 @@ class Ui_Widget(object):
         self.label_2.setGeometry(QtCore.QRect(0, 110, 121, 16))
         self.label_2.setObjectName("label_2")
 
-        self.label_generatedPassword = QtWidgets.QLineEdit(Widget)
-        self.label_generatedPassword.setGeometry(QtCore.QRect(110, 50, 281, 22))
+        self.label_generatedPassword = QtWidgets.QLabel(Widget)
+        self.label_generatedPassword.setGeometry(
+            QtCore.QRect(130, 80, 261, 16))
         self.label_generatedPassword.setObjectName("label_generatedPassword")
 
         self.lable_Username = QtWidgets.QLabel(Widget)
