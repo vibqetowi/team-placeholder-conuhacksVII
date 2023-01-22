@@ -23,7 +23,7 @@ class Ui_Widget(object):
         self.input_URL = QtWidgets.QLineEdit(Widget)
         self.input_URL.setGeometry(QtCore.QRect(110, 10, 291, 22))
         self.input_URL.setObjectName("input_URL")
-        self.input_URL.setPlaceholderText("enter website name/url")
+        self.input_URL.setPlaceholderText("website name/url - mandatory field")
 
         self.label = QtWidgets.QLabel(Widget)
         self.label.setGeometry(QtCore.QRect(20, 10, 58, 15))
@@ -33,7 +33,7 @@ class Ui_Widget(object):
         self.input_masterPassword.setGeometry(QtCore.QRect(110, 110, 281, 22))
         self.input_masterPassword.setObjectName("input_masterPassword")
         self.input_masterPassword.setPlaceholderText(
-            "we recommend passphrases")
+            "mandatory - we recommend pass phrases")
 
         self.label_2 = QtWidgets.QLabel(Widget)
         self.label_2.setGeometry(QtCore.QRect(0, 110, 121, 16))
@@ -114,18 +114,30 @@ class Ui_Widget(object):
 
         self.input_username.setText('')
         url = self.input_URL.text()
+        master_password = self.input_masterPassword.text()
+
+        # exception handling/ shaming the user when they make mistakes
+        # I haven't slept ok, let me have some fun. Minh
+        if not url:
+            self.btn_generatePassword.setText(
+                'URL IS MANDATORY DAMNIT\nLearn To Read!!!\nTry Again >:(')
+            return
+        elif compute_bit_entropy(master_password) < 50:
+            self.btn_generatePassword.setText(
+                'Your Master Password is Trash\nDude. Wikihow -> Passphrases\nTry Again >:(')
+            return
+        # if user unchecked all boxes
+        elif wb.get_plaintext_password() == "Invalid Selection!":
+            self.btn_generatePassword.setText(
+                'Check At Least One Box\nShame On You!!!\nTry Again >:(')
+            return
 
         # ADD THE CODE GENERATIO CODE
         wb = Website(url, int(self.input_Length.text()), self.chkbx_nubers.isChecked(
         ), self.chkbx_Lowecase.isChecked(), self.chkbx_upercase.isChecked(), self.chkbx_specialChars.isChecked())
-        us = User(self.input_masterPassword.text())
-        entropy = wb.get_entropy()
 
-        if wb.get_plaintext_password().equals("Invalid Selection!"):
-            # shames the user for being stupid and not selecting a checkbox properly
-            self.btn_generatePassword.setText('Check At Least One Box\nShame On You\nTry Again >:(')
-            return
-              
+        us = User(master_password)
+        entropy = wb.get_entropy()
 
         # update website username, if user did not put username
         # generate one
@@ -139,21 +151,23 @@ class Ui_Widget(object):
         jv.write_data(self.input_username.text(), url,
                       wb.get_plaintext_password(), entropy)
         print("website saved")
-        
+
         self.provide_password_report(entropy)
 
     # changes the text on generate password btn to educate
     # the user on the strength of the password
     def provide_password_report(self, entropy):
-        
+
         password_strength = ''
-        if entropy < 60: password_strength = 'weak'
-        elif entropy < 100: password_strength = 'medium'
-        else: password_strength = 'strong'
+        if entropy < 60:
+            password_strength = 'weak'
+        elif entropy < 100:
+            password_strength = 'medium'
+        else:
+            password_strength = 'strong'
 
         self.btn_generatePassword.setText(
             f'Password entropy: {int(entropy)} bits \nThis Password is {password_strength} \nClick to generate another')
-
 
     def genQRCode(self, Widget):
         file_path = 'qr.png'
@@ -184,9 +198,11 @@ class Ui_Widget(object):
             _translate("Widget", "specialCharacters"))
         self.label_3.setText(_translate("Widget", "Length"))
         self.input_Length.setText(_translate("Widget", "32"))
-        self.btn_generatePassword.setText(_translate("Widget", "Generate Password"))
+        self.btn_generatePassword.setText(
+            _translate("Widget", "Generate Password"))
         self.btn_generateQR.setText(_translate("Widget", "Generate QR"))
         self.btn_TransferPasswords.setText(_translate("Widget", "Run Server"))
+
 
 def main():
     import sys
@@ -196,6 +212,7 @@ def main():
     ui.setupUi(Widget)
     Widget.show()
     sys.exit(app.exec())
+
 
 if __name__ == "__main__":
     main()

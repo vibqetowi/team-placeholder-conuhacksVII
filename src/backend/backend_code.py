@@ -94,12 +94,14 @@ class Website:
         self.plaintext_password = str(f0.sentence(ext_word_list=charset,
                                                   nb_words=pwlen*2).replace(' ', ''))[:pwlen]
 
-        self.entropy_bits = compute_bit_entropy(
-            pwlen, len(set(self.plaintext_password)))
+        self.entropy_bits = compute_bit_entropy(self.plaintext_password)
 
 
 # bits of entropy in string = log2(unique characters ^ length of string)
-def compute_bit_entropy(string_length: int, charset_size: int) -> float:
+def compute_bit_entropy(password) -> float:
+    charset_size = len(set(password))
+    string_length = len(password)
+    
     return math.log(charset_size**string_length, 2)
 
 
