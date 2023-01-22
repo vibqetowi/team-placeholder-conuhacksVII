@@ -4,8 +4,7 @@ import string
 import math
 import numpy as np
 import pandas as pd
-import sounddevice as sd
-from scipy.io.wavfile import write
+import pyaudio
 
 
 lowercase_letters = list(string.ascii_lowercase)
@@ -13,14 +12,22 @@ uppercase_letters = list(string.ascii_uppercase)
 digits = list(string.digits)
 special_characters = list(string.punctuation)
 
+class Website: 
+    website_url, website_username, website_password
 
+    def __init__(self, username, url):
+
+        self.website_username = username
+        self.website_url = url
+        self.website_password = 
+        
 class User:
-    username = None
-    master_password = None
+    master_password, vault
 
-    def __init__(self, username, master_password):
+    def __init__(self, master_password):
         self.username = username
         self.master_password = master_password
+        self.vault = []
 
     def get_username(self): return self.username
     def get_master_password(self): return self.master_password
@@ -29,6 +36,7 @@ class User:
         self.username = new_username
 
     def update_master_password(self, new_master_password):
+        #TODO validate new master password 
         self.master_password = new_master_password
 
 
@@ -83,21 +91,32 @@ def compute_bit_entropy(string_length: int, charset_size: int) -> float:
 
 def generate_numerical_value_from_audio_input() -> float:
 
-    # record 1 sec audio clip into numpy array
-    fs = 44100  # Sample rate
-    seconds = 1  # Duration of recording
+    RATE=16000
+    RECORD_SECONDS = 0.5
+    CHUNKSIZE = 1024
 
-    numpy_array_from_audio_clip = sd.rec(int(seconds * fs), samplerate=fs, channels=2)
-    sd.wait()  # Wait until recording is finished
-    #write('.//backend//output.wav', fs,
-    #      numpy_array_from_audio_clip)  # Save as WAV file
+    # initialize portaudio
+    p = pyaudio.PyAudio()
+    stream = p.open(format=pyaudio.paInt16, channels=1, 
+                    rate=RATE, input=True, 
+                    frames_per_buffer=CHUNKSIZE)
 
-    # numpy_array_from_audio_clip, sr = a2n.audio_from_file(
-    #     ".//backend//test.mp3")
+    frames = [] # A python-list of chunks(numpy.ndarray)
+    for _ in range(0, int(RATE / CHUNKSIZE * RECORD_SECONDS)):
+        data = stream.read(CHUNKSIZE)
+        frames.append(numpy.fromstring(data, dtype=numpy.int16))
+
+    #Convert the list of numpy-arrays into a 1D array (column-wise)
+    numpydata = numpy.hstack(frames)
+
+    # close stream
+    stream.stop_stream()
+    stream.close()
+    p.terminate()
     
-    x = sum(sum(map(abs, numpy_array_from_audio_clip)))
-    x = math.factorial(int(x))
-    print(x)
+    # x = sum(sum(map(abs, numpy_array_from_audio_clip)))
+    # x = math.factorial(int(x))
+    print(numpydata)
     
 
 
