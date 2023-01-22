@@ -13,16 +13,20 @@ digits = list(string.digits)
 special_characters = list(string.punctuation)
 
 class Website: 
-    website_url, website_username, website_password
+    website_url = None
+    website_username = None
+    website_password = None
 
-    def __init__(self, username, url):
+    def __init__(self, username, url, password):
 
         self.website_username = username
         self.website_url = url
-        self.website_password = 
-        
+        self.website_password = password
+
+
 class User:
-    master_password, vault
+    master_password = None
+    vault = None
 
     def __init__(self, master_password):
         self.username = username
@@ -101,22 +105,22 @@ def generate_numerical_value_from_audio_input() -> float:
                     rate=RATE, input=True, 
                     frames_per_buffer=CHUNKSIZE)
 
-    frames = [] # A python-list of chunks(numpy.ndarray)
+    frames = [] # A python-list of chunks(np.ndarray)
     for _ in range(0, int(RATE / CHUNKSIZE * RECORD_SECONDS)):
         data = stream.read(CHUNKSIZE)
-        frames.append(numpy.fromstring(data, dtype=numpy.int16))
+        frames.append(np.fromstring(data, dtype=np.int16))
 
-    #Convert the list of numpy-arrays into a 1D array (column-wise)
-    numpydata = numpy.hstack(frames)
+    #Convert the list of np-arrays into a 1D array (column-wise)
+    npdata = np.hstack(frames)
 
     # close stream
     stream.stop_stream()
     stream.close()
     p.terminate()
     
-    # x = sum(sum(map(abs, numpy_array_from_audio_clip)))
+    x = sum(map(abs, npdata))
     # x = math.factorial(int(x))
-    print(numpydata)
+    print(x)
     
 
 
@@ -127,7 +131,7 @@ if __name__ == "__main__":
 
 
 # from faker import Faker
-# import audio2numpy as a2n
+# import audio2np as a2n
 # import string
 
 # class User:
