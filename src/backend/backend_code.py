@@ -89,8 +89,8 @@ def generate_numerical_value_from_audio_input() -> float:
 
     numpy_array_from_audio_clip = sd.rec(int(seconds * fs), samplerate=fs, channels=2)
     sd.wait()  # Wait until recording is finished
-    write('.//backend//output.wav', fs,
-          numpy_array_from_audio_clip)  # Save as WAV file
+    #write('.//backend//output.wav', fs,
+    #      numpy_array_from_audio_clip)  # Save as WAV file
 
     # numpy_array_from_audio_clip, sr = a2n.audio_from_file(
     #     ".//backend//test.mp3")
