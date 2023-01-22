@@ -6,7 +6,8 @@ Description:
 
 
 Team Placeholder:
-Bryan Andrianantenaina
-Enrique []
-Minh Huynh
-Navjot Singh
+
+Bryan Andrianantenaina <br/>
+Enrique [] <br/>
+Minh Huynh <br/>
+Navjot Singh <br/>
