@@ -1,28 +1,99 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Input Form</title>
-    <link rel="stylesheet" href="styles.css">
-  </head>
-  <body>
-    <form>
-      <label for="input">Enter MasterKey:</label>
-      <input type="password" id="input" name="input">
-      <br><br>
-      <input type="button" value="Access" onclick="submitForm()">
-    </form>
-    <script>
-      function submitForm() {
-        var input = document.getElementById("input").value;
-        var master_password = "<%= user.get_master_password() %>";
-        var input_password = document.getElementById("input").value;
-        if (input_password === master_password) {
-            alert("Access granted!");
-            window.location = 'vault.json';
-        } else {
-            alert("Access denied! Incorrect password.");
-        }
-      }
+
+<html lang="en">
+  
+<head>
+    <meta charset="UTF-8">
+    <title>GFG User Details</title>
+  
+    <!-- INCLUDING JQUERY-->
+    <script src="https://code.jquery.com/jquery-3.5.1.js">
     </script>
-  </body>
+  
+    <!-- CSS FOR STYLING THE PAGE -->
+    <style>
+        table {
+            margin: 0 auto;
+            font-size: large;
+            border: 1px solid black;
+        }
+  
+        h1 {
+            text-align: center;
+            color: #006600;
+            font-size: xx-large;
+            font-family: 'Gill Sans', 
+                'Gill Sans MT', ' Calibri', 
+                'Trebuchet MS', 'sans-serif';
+        }
+  
+        td {
+            background-color: #E4F5D4;
+            border: 1px solid black;
+        }
+  
+        th,
+        td {
+            font-weight: bold;
+            border: 1px solid black;
+            padding: 10px;
+            text-align: center;
+        }
+  
+        td {
+            font-weight: lighter;
+        }
+    </style>
+</head>
+  
+<body>
+    <section>
+        <h1>Welcome to the Vault!</h1>
+  
+        <!-- TABLE CONSTRUCTION-->
+        <table id='table'>
+            <!-- HEADING FORMATION -->
+            <tr>
+                <th>Username</th>
+                <th>Website URL</th>
+                <th>Password</th>
+                <th>Entropy</th>
+            </tr>
+  
+            <script>
+                $(document).ready(function () {
+  
+                    // FETCHING DATA FROM JSON FILE
+                    $.getJSON("decrypted_vault.json", 
+                            function (data) {
+                        var student = '';
+  
+                        // ITERATING THROUGH OBJECTS
+                        $.each(data, function (key, value) {
+  
+                            //CONSTRUCTION OF ROWS HAVING
+                            // DATA FROM JSON OBJECT
+                            student += '<tr>';
+                            student += '<td>' + 
+                                value.username + '</td>';
+  
+                            student += '<td>' + 
+                                value.url + '</td>';
+  
+                            student += '<td>' + 
+                                value.password + '</td>';
+  
+                            student += '<td>' + 
+                                value.password_entropy + '</td>';
+  
+                            student += '</tr>';
+                        });
+                          
+                        //INSERTING ROWS INTO TABLE 
+                        $('#table').append(student);
+                    });
+                });
+            </script>
+    </section>
+</body>
+  
 </html>
