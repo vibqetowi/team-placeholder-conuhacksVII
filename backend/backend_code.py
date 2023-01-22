@@ -2,11 +2,17 @@ from faker import Faker
 import audio2numpy as a2n
 import string
 import math
+import numpy as np
+import pandas as pd
+import sounddevice as sd
+from scipy.io.wavfile import write
+
 
 lowercase_letters = list(string.ascii_lowercase)
 uppercase_letters = list(string.ascii_uppercase)
 digits = list(string.digits)
 special_characters = list(string.punctuation)
+
 
 class User:
     username = None
@@ -22,7 +28,7 @@ class User:
     def update_username(self, new_username):
         self.username = new_username
 
-    def update_master_password (self, new_master_password):
+    def update_master_password(self, new_master_password):
         self.master_password = new_master_password
 
 
@@ -34,47 +40,71 @@ class Password:
     plaintext_password = None
     entropy_bits = None
 
-    def __init__(self, url:str,pwlen: int, 
-                include_num: bool,
-                include_lowercase: bool,
-                include_uppercase: bool,
-                include_special_char: bool):
-                
-
-        x,sr=a2n.audio_from_file("./test.mp3")
-        print(x)
+    def __init__(self, url: str, pwlen: int,
+                 include_num: bool,
+                 include_lowercase: bool,
+                 include_uppercase: bool,
+                 include_special_char: bool):
 
         # define characters used in password
         charset = []
-        if include_lowercase: charset += lowercase_letters
-        if include_uppercase: charset += uppercase_letters
-        if include_num: charset += digits
-        if include_special_char: charset += special_characters
+        if include_lowercase:
+            charset += lowercase_letters
+        if include_uppercase:
+            charset += uppercase_letters
+        if include_num:
+            charset += digits
+        if include_special_char:
+            charset += special_characters
 
+        # create faker object
         f0 = Faker()
+
+        generate_numerical_value_from_audio_input()
+
+        # define the seed for the password as the site url + an audio clip captured by the mic
         Faker.seed(url)
 
         self.plaintext_password = str(f0.sentence(
-                                    ext_word_list=charset, nb_words = pwlen*2).
-                                    replace(' ', ''))[:-1]
+            ext_word_list=charset, nb_words=pwlen*2).
+            replace(' ', ''))[:-1]
 
-        self.entropy_bits = compute_bit_entropy(pwlen, len(set(self.plaintext_password)))
+        self.entropy_bits = compute_bit_entropy(
+            pwlen, len(set(self.plaintext_password)))
 
-
-    
     def get_plaintext_password(self): return self.plaintext_password
     def get_entropy(self): return self.entropy_bits
 
 
 # bits of entropy in string = log2(unique characters ^ length of string)
-def compute_bit_entropy(string_length: int, charset_size:int)-> float:
-    return math.log(charset_size**string_length,2)
+def compute_bit_entropy(string_length: int, charset_size: int) -> float:
+    return math.log(charset_size**string_length, 2)
+
+
+def generate_numerical_value_from_audio_input() -> float:
+
+    # record 1 sec audio clip into numpy array
+    fs = 44100  # Sample rate
+    seconds = 1  # Duration of recording
+
+    numpy_array_from_audio_clip = sd.rec(int(seconds * fs), samplerate=fs, channels=2)
+    sd.wait()  # Wait until recording is finished
+    write('.//backend//output.wav', fs,
+          numpy_array_from_audio_clip)  # Save as WAV file
+
+    # numpy_array_from_audio_clip, sr = a2n.audio_from_file(
+    #     ".//backend//test.mp3")
+    
+    x = sum(sum(map(abs, numpy_array_from_audio_clip)))
+    x = math.factorial(int(x))
+    print(x)
+    
+
 
 if __name__ == "__main__":
-    pw = Password("url", 99, True,True,True,True)
+    pw = Password("url", 99, True, True, True, True)
     print(pw.get_plaintext_password())
     print(pw.get_entropy())
-
 
 
 # from faker import Faker
@@ -102,16 +132,15 @@ if __name__ == "__main__":
 #     digits = list(string.digits)
 #     special_characters = list(string.punctuation)
 
-#     def __init__(self, url:str,len: int, 
+#     def __init__(self, url:str,len: int,
 #                 include_num: bool,
 #                 include_lowercase: bool,
 #                 include_uppercase: bool,
 #                 include_special_char: bool):
-                
+
 
 #         # x,sr=a2n.audio_from_file("test.mp3")
 #         # print(x)
-
 
 
 #         f0 = Faker()
@@ -119,8 +148,6 @@ if __name__ == "__main__":
 
 #         print(f0.sentence(ext_word_list=charset, nb_words= 99).replace(' ',''))
 #         return pw
-
-  
 
 
 #     def get_lowercase_letters(self): return self.lowercase_letters
