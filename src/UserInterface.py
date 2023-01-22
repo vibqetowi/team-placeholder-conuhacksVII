@@ -9,7 +9,7 @@
 from PyQt6 import QtCore, QtGui, QtWidgets
 import sys
 import cv2
-
+from backend.backend_code import *
 
 class Ui_Widget(object):
     def setupUi(self, Widget):
@@ -88,8 +88,10 @@ class Ui_Widget(object):
 
     def genPassword(self, Widget):
         #ADD THE CODE GENERATIO CODE
-        print("Button clicked")
-        self.label_generatedPassword.setText("HURAAAAYYYY!!!")
+        pw = Password(self.input_URL.text(), int(self.input_Compexity.text()),self.chkbx_nubers.isChecked(),self.chkbx_Lowecase.isChecked(),self.chkbx_upercase.isChecked(),self.chkbx_specialChars.isChecked())
+        us = User(self.input_username.text(), self.input_masterPassword.text())
+        print("btn clicked")
+        self.label_generatedPassword.setText(pw.get_plaintext_password())
     def genQRCode(self, Widget):
         img = cv2.imread("/tmp/qr.png", cv2.IMREAD_ANYCOLOR)
         
