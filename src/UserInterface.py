@@ -43,6 +43,9 @@ class Ui_Widget(object):
         self.label_generatedPassword.setGeometry(
             QtCore.QRect(130, 80, 261, 16))
         self.label_generatedPassword.setObjectName("label_generatedPassword")
+        # this makes the password label selectable and copiable with the mouse
+        self.label_generatedPassword.setTextInteractionFlags(
+            QtCore.Qt.TextInteractionFlag.TextSelectableByMouse)
 
         self.lable_Username = QtWidgets.QLabel(Widget)
         self.lable_Username.setGeometry(QtCore.QRect(20, 50, 58, 15))
