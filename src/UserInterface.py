@@ -104,7 +104,7 @@ class Ui_Widget(object):
         self.list_paswords.setObjectName("list_paswords")
 
         self.btn_TransferPasswords = QtWidgets.QPushButton(Widget)
-        self.btn_TransferPasswords.setGeometry(QtCore.QRect(460, 230, 121, 44a))
+        self.btn_TransferPasswords.setGeometry(QtCore.QRect(460, 230, 121, 44))
         self.btn_TransferPasswords.setObjectName("btn_TransferPasswords")
 
         self.retranslateUi(Widget)
