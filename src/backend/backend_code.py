@@ -110,6 +110,13 @@ class Website:
 
 
 # bits of entropy in string = log2(unique characters ^ length of string)
+# I implemented the formula as E= log2((num_unique_chars_in_password)^(password_length))
+# since the real formula uses the actual size of the character set instead of 
+# num_unique_chars_in_password, so for instance if we included lowercase letters the charset
+# size would be at least 26. Which is to say this formula produces an underestimation of the real entropy
+
+# I did not want to analyze the password and work out the charset backwards due to time constraints. That
+# being said, under reporting securoty level is better than over-reporting it in this case
 def compute_bit_entropy(password) -> float:
     charset_size = len(set(password))
     string_length = len(password)
