@@ -169,7 +169,9 @@ class Ui_Widget(object):
 
         self.provide_password_report(entropy)
         self.addJsonToList()
+
         encrypt(master_password)
+        decrypt(master_password)
 
     def addJsonToList(self):
         model = QtGui.QStandardItemModel()
