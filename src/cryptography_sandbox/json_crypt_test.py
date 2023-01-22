@@ -19,7 +19,7 @@ def encrypt(password, json):
         token = file.read()
     en = f.encrypt(bytes(token))
 
-    with open('.//src//cryptography_sandbox//encrypted_json.json', 'wb') as encrypted_file:
+    with open('.//src//cryptography_sandbox//encrypted_json.txt', 'wb') as encrypted_file:
         encrypted_file.write(en)
 
 
