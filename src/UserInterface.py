@@ -161,7 +161,7 @@ class Ui_Widget(object):
 
         self.label_generatedPassword.setText(wb.get_plaintext_password())
 
-        jv = JSONVault('.//src//server//vault.json')
+        jv = JSONVault('vault.json')
         jv.write_data(self.input_username.text(), url,
                       wb.get_plaintext_password(), entropy)
         print("website saved")
@@ -173,7 +173,7 @@ class Ui_Widget(object):
         model = QtGui.QStandardItemModel()
         self.list_paswords.setModel(model)
         values = []
-        with open('.//src//server//vault.json') as json_f:
+        with open('vault.json') as json_f:
             data = json.load(json_f)
         for i in data:
             string = i['url'] + ':' + i['username'] + ':' + i['password']
