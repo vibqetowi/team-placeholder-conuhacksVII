@@ -26,6 +26,4 @@ class JSONVault:
                 json.dump(existing_data, json_file, indent=4)
                 print("Data successfully appended to the JSON file.")
 
-vault = JSONVault('./vault.json')
-vault.write_data("Cow", "https://github.com/vibqetowi/team-placeholder-conuhacksVII", "9888")
 
