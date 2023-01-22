@@ -3,8 +3,9 @@ import audio2numpy as a2n
 import string
 import math
 import numpy as np
-import pandas as pd
+import secrets
 import pyaudio
+import random
 
 
 lowercase_letters = list(string.ascii_lowercase)
@@ -18,12 +19,12 @@ class User:
     vault = None
 
     def __init__(self, master_password):
-        self.master_password = master_password
+        self.set_master_password(master_password)
         self.vault = []
 
     def get_master_password(self): return self.master_password
 
-    def update_master_password(self, new_master_password):
+    def set_master_password(self, master_password):
         # TODO validate new master password
         self.master_password = new_master_password
 
@@ -56,20 +57,22 @@ class Website:
             ext_word_list=lowercase_letters, nb_words=12).
             replace(' ', ''))[:-1]
 
-        self.plaintext_password = set_password(url, pwlen, include_num, include_lowercase,
-                                               include_uppercase, include_special_char)
+        self.set_password (pwlen, include_num, include_lowercase,
+                            include_uppercase, include_special_char)
 
-        self.entropy_bits = compute_bit_entropy(
-            pwlen, len(set(self.plaintext_password)))
+
 
     def get_plaintext_password(self): return self.plaintext_password
     def get_entropy(self): return self.entropy_bits
     def get_website_username(self): return self.website_username
     def get_website_url(self): return self.website_url
 
-    def generate_password_seed() -> int:
+    def generate_password_seed(self) -> float:
 
-        return hash(self.get_website_url)*hash_from_audio()
+        seed = hash(self.get_website_url)*hash_from_audio()*secrets.randbits(256)
+        print (seed)
+        return seed
+
 
     def set_password(self, pwlen: int, include_num: bool, include_lowercase: bool,
                      include_uppercase: bool, include_special_char: bool):
@@ -87,11 +90,13 @@ class Website:
         # create faker object
         f0 = Faker()
 
-        # define the seed for the password as the site url + an audio clip captured by the mic
-        Faker.seed(self.get_website_url())
+        # compute seed from url and short clip captured by mic
+        Faker.seed(self.generate_password_seed())
 
-        return str(f0.sentence(ext_word_list=charset,
-                               nb_words=pwlen*2).replace(' ', ''))[:-1]
+        self.plaintext_password = str(f0.sentence(ext_word_list=charset,
+                                    nb_words=pwlen*2).replace(' ', ''))[:pwlen]
+
+        self.entropy_bits = compute_bit_entropy(pwlen, len(set(self.plaintext_password)))
 
 
 # bits of entropy in string = log2(unique characters ^ length of string)
@@ -126,15 +131,16 @@ def hash_from_audio() -> int:
     stream.close()
     p.terminate()
 
-    x = prod(map(abs, npdata))
+    x = sum(map(abs, npdata))
     return int(x)
 
 
 if __name__ == "__main__":
-    pw = Password("url", 99, True, True, True, True)
-    print(f'pw 0: {pw.get_plaintext_password()} entropy: {pw.get_entropy()}')
+    wb = Website("url", 5, True, True, True, True)
+    print(f'wb0: {wb.get_plaintext_password()} entropy: {wb.get_entropy()}')
 
-    pw.set_password
+    wb.set_password(3,False,True,True,False)
+    print(f'wb1: {wb.get_plaintext_password()} entropy: {wb.get_entropy()}')
 
 
 # from faker import Faker
