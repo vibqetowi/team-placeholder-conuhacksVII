@@ -26,7 +26,7 @@ class User:
 
     def set_master_password(self, master_password):
         # TODO validate new master password
-        self.master_password = new_master_password
+        self.master_password = master_password
 
 
 # class Password contains all credentials of a particular website
@@ -54,7 +54,7 @@ class Website:
         f0 = Faker()
         Faker.seed(url)
         self.website_username = str(f0.sentence(
-            ext_word_list=lowercase_letters, nb_words=12).
+            ext_word_list=lowercase_letters+uppercase_letters, nb_words=9).
             replace(' ', ''))[:-1]
 
         self.set_password (pwlen, include_num, include_lowercase,
