@@ -11,7 +11,7 @@ import sys
 import cv2
 from src.backend.backend_code import *
 from src.to_json import *
-from src.qr_code import *
+from src.server.qr_code import *
 import pandas as pd
 
 
@@ -94,17 +94,17 @@ class Ui_Widget(object):
         self.btn_generatePassword.setObjectName("btn_generatePassword")
         self.btn_generatePassword.clicked.connect(self.genPassword)
 
-        self.btn_generateQR = QtWidgets.QPushButton(Widget)
-        self.btn_generateQR.setGeometry(QtCore.QRect(460, 200, 150, 23))
-        self.btn_generateQR.setObjectName("btn_generateQR")
-        self.btn_generateQR.clicked.connect(self.genQRCode)
+        # self.btn_generateQR = QtWidgets.QPushButton(Widget)
+        # self.btn_generateQR.setGeometry(QtCore.QRect(460, 200, 150, 23))
+        # self.btn_generateQR.setObjectName("btn_generateQR")
+        # self.btn_generateQR.clicked.connect(self.genQRCode)
 
         self.list_paswords = QtWidgets.QListView(Widget)
         self.list_paswords.setGeometry(QtCore.QRect(410, 0, 256, 192))
         self.list_paswords.setObjectName("list_paswords")
 
         self.btn_TransferPasswords = QtWidgets.QPushButton(Widget)
-        self.btn_TransferPasswords.setGeometry(QtCore.QRect(460, 230, 121, 23))
+        self.btn_TransferPasswords.setGeometry(QtCore.QRect(460, 230, 121, 44))
         self.btn_TransferPasswords.setObjectName("btn_TransferPasswords")
 
         self.retranslateUi(Widget)
@@ -169,20 +169,20 @@ class Ui_Widget(object):
 
         self.btn_generatePassword.setText(
             f'Password entropy: {int(entropy)} bits \nThis Password is {password_strength} \nClick to generate another')
-    '''
-    def genQRCode(self, Widget):
-        file_path = 'qr.png'
-        file_reader = JSONFileReader('vault.json')
-        json_str = file_reader.read_file()
-        qr_code = QR_Code(json_str)
-        qr_code.generate_qr_code(file_path)
-        print(json_str)
 
-        img = cv2.imread("qr.png", cv2.IMREAD_ANYCOLOR)
+    # def genQRCode(self, Widget):
+    #     file_path = 'qr.png'
+    #     file_reader = JSONFileReader('vault.json')
+    #     json_str = file_reader.read_file()
+    #     qr_code = QR_Code(json_str)
+    #     qr_code.generate_qr_code(file_path)
+    #     print(json_str)
 
-        cv2.imshow("QR", img)
-        cv2.waitKey(0)
-    '''
+    #     img = cv2.imread("qr.png", cv2.IMREAD_ANYCOLOR)
+
+    #     cv2.imshow("QR", img)
+    #     cv2.waitKey(0)
+
     def retranslateUi(self, Widget):
         _translate = QtCore.QCoreApplication.translate
         Widget.setWindowTitle(_translate("Widget", "Widget"))
@@ -201,8 +201,9 @@ class Ui_Widget(object):
         self.input_Length.setText(_translate("Widget", "32"))
         self.btn_generatePassword.setText(
             _translate("Widget", "Generate Password"))
-        self.btn_generateQR.setText(_translate("Widget", "Generate QR"))
-        self.btn_TransferPasswords.setText(_translate("Widget", "Run Server"))
+
+        # self.btn_generateQR.setText(_translate("Widget", "Generate QR"))
+        self.btn_TransferPasswords.setText(_translate("Widget", "Export Vault"))
 
 
 def main():

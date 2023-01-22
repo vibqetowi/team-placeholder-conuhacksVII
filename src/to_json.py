@@ -2,6 +2,7 @@ import json
 from os import path
 
 
+
 class JSONVault:
     def __init__(self, filename):
         self.filename = filename
