@@ -88,7 +88,7 @@ class Ui_Widget(object):
 
     def genPassword(self, Widget):
         #ADD THE CODE GENERATIO CODE
-        pw = Password(self.input_URL.text(), int(self.input_Compexity.text()),self.chkbx_nubers.isChecked(),self.chkbx_Lowecase.isChecked(),self.chkbx_upercase.isChecked(),self.chkbx_specialChars.isChecked())
+        pw = Website(self.input_URL.text(), int(self.input_Compexity.text()),self.chkbx_nubers.isChecked(),self.chkbx_Lowecase.isChecked(),self.chkbx_upercase.isChecked(),self.chkbx_specialChars.isChecked())
         us = User(self.input_masterPassword.text())
         print("btn clicked")
         self.label_generatedPassword.setText(pw.get_plaintext_password())
