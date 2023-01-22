@@ -1,7 +1,6 @@
 import json
 from os import path
-
-
+from cryptography.fernet import Fernet
 
 class JSONVault:
     def __init__(self, filename):
