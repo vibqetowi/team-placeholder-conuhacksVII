@@ -159,13 +159,12 @@ class Ui_Widget(object):
 
         self.label_generatedPassword.setText(wb.get_plaintext_password())
 
-        jv = JSONVault('vault.json')
+        jv = JSONVault('.//src//server//vault.json')
         jv.write_data(self.input_username.text(), url,
                       wb.get_plaintext_password(), entropy)
         print("website saved")
 
         self.provide_password_report(entropy)
-<<<<<<< HEAD
         self.addJsonToList()
 
     def addJsonToList(self):
@@ -183,9 +182,7 @@ class Ui_Widget(object):
             model.appendRow(item)
         self.gridLayout.addWidget(self.list_paswords, 1, 0, 1, 2)
         
-=======
 
->>>>>>> 79579f4bd8cb75128d8ce2dea2563a92ecffafb7
     # changes the text on generate password btn to educate
     # the user on the strength of the password
 
