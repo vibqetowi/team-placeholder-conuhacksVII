@@ -168,7 +168,7 @@ class Ui_Widget(object):
 
         self.btn_generatePassword.setText(
             f'Password entropy: {int(entropy)} bits \nThis Password is {password_strength} \nClick to generate another')
-
+    '''
     def genQRCode(self, Widget):
         file_path = 'qr.png'
         file_reader = JSONFileReader('vault.json')
@@ -181,7 +181,7 @@ class Ui_Widget(object):
 
         cv2.imshow("QR", img)
         cv2.waitKey(0)
-
+    '''
     def retranslateUi(self, Widget):
         _translate = QtCore.QCoreApplication.translate
         Widget.setWindowTitle(_translate("Widget", "Widget"))
