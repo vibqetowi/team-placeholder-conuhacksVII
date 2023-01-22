@@ -1,26 +1,20 @@
-import http.server
-import socket
-import socketserver
-import sys
-from qr_code import QR_Code
+import os
+from http.server import HTTPServer, BaseHTTPRequestHandler
 
-PORT = 8000
-DIRECTORY = "."
-class handler(http.server.SimpleHTTPRequestHandler):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args,direcory = DIRECTORY, **kwargs)
+class MyHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        if self.path == '/download':
+            filename = 'vault.json'
+            self.send_response(200)
+            self.send_header('Content-type', 'application/octet-stream')
+            self.send_header('Content-Disposition', 'attachment; filename={}'.format(filename))
+            self.end_headers()
+            with open(filename, 'rb') as f:
+                self.wfile.write(f.read())
+        else:
+            self.send_response(404)
+            self.end_headers()
 
-    def getIP(PORT):
-        global clientsocket
-        ip = socket.gethostbyname(socket.gethostname())
-        with socketserver.TCPServer((ip, PORT), handler) as httpd:
-            print("serving at port", PORT)
-            httpd.serve_forever()
-
-
-
-site = handler
-site.__init__
 
 
 
