@@ -115,6 +115,10 @@ class Ui_Widget(object):
         self.input_username.setText('')
         url = self.input_URL.text()
         master_password = self.input_masterPassword.text()
+        print(compute_bit_entropy(master_password))
+
+        wb = Website(url, int(self.input_Length.text()), self.chkbx_nubers.isChecked(
+        ), self.chkbx_Lowecase.isChecked(), self.chkbx_upercase.isChecked(), self.chkbx_specialChars.isChecked())
 
         # exception handling/ shaming the user when they make mistakes
         # I haven't slept ok, let me have some fun. Minh
@@ -122,7 +126,7 @@ class Ui_Widget(object):
             self.btn_generatePassword.setText(
                 'URL IS MANDATORY DAMNIT\nLearn To Read!!!\nTry Again >:(')
             return
-        elif compute_bit_entropy(master_password) < 50:
+        elif compute_bit_entropy(master_password) < 40:
             self.btn_generatePassword.setText(
                 'Your Master Password is Trash\nDude. Wikihow -> Passphrases\nTry Again >:(')
             return
@@ -133,9 +137,6 @@ class Ui_Widget(object):
             return
 
         # ADD THE CODE GENERATIO CODE
-        wb = Website(url, int(self.input_Length.text()), self.chkbx_nubers.isChecked(
-        ), self.chkbx_Lowecase.isChecked(), self.chkbx_upercase.isChecked(), self.chkbx_specialChars.isChecked())
-
         us = User(master_password)
         entropy = wb.get_entropy()
 
