@@ -96,4 +96,40 @@
     </section>
 </body>
   
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Input Form</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <form>
+    <label for="input">Enter MasterKey:</label>
+    <input type="password" id="input" name="input">
+    <br><br>
+    <input type="button" value="Access" onclick="submitForm()">
+  </form>
+  <script>
+    function submitForm() {
+      var input = document.getElementById("input").value;
+      var master_password = "<%= user.get_master_password() %>";
+      var input_password = document.getElementById("input").value;
+      if (input_password === master_password) {
+        alert("Access granted!");
+        window.location = 'vault.json';
+      } else {
+        alert("Access denied! Incorrect password.");
+      }
+      const key = master_password; // 32-byte (256-bit) key
+      const fernet = new crypto.Fernet(key);
+
+      const encryptedText = "gAAAAABjzUdkU5uS_WfAUG4do-8w8-YIE2ltS57TryYkle7d_URx7_ntwn7HjQDs5RhL76NplEW6zPgp74eqAojTHCzpjhpCDmkY2p6iWG469eD1gUSgWlUPNxZF7boGYxd5Z8X2sbKHo_aIzwW89IbNqc72EUMbkP297ctaWMMijbDVgfC551Whft_YhD2JZncWJwny95SDiBwU-2ZyBjpoNNyPqoA9mnKz4jMHiLbEMgqu8Kyy7wzjgTdAkPwMZ5BE5ukf8crs_djgSNyWnw1qiJKW5X1bCp0zHi96OMm6m_qRfQOxFFK6QpQx2Qd_bTcV0Mbb_SDUrpvm7kV5Zulb0HP6lO98NCmXs9nxXnnfcM5QDf_NC3wNJUtNtvYLOlcOInu-AzE6dyXu4AZQo2Qged7IMCSSAgLA5HZOxjAbS3FeAwx_GT2Q8kd-o_1jksXsm0R_ysDZ4kGc9PUGlSvoKXIUUO5TnizOUpoMGiwS1kxAk-Ab84M=";
+      const decrypted = fernet.decrypt(Buffer.from(encryptedText, 'base64'));
+      console.log('Decrypted Text:', decrypted.toString());
+    }
+  </script>
+</body>
+
 </html>
