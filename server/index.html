@@ -5,18 +5,19 @@
   </head>
   <body>
     <form>
-      <label for="input">Enter the password:</label>
+      <label for="input">Enter MasterKey:</label>
       <input type="password" id="input" name="input">
       <br><br>
-      <input type="button" value="Submit" onclick="submitForm()">
+      <input type="button" value="Access" onclick="submitForm()">
     </form>
     <script>
       function submitForm() {
         var input = document.getElementById("input").value;
         var master_password = "<%= user.get_master_password() %>";
-        var input_password = hashlib.sha256(input.encode()).hexdigest();
+        var input_password = document.getElementById("input").value;
         if (input_password === master_password) {
             alert("Access granted!");
+            window.location = 'vault.json';
         } else {
             alert("Access denied! Incorrect password.");
         }
