@@ -173,7 +173,7 @@ class Ui_Widget(object):
         model = QtGui.QStandardItemModel()
         self.list_paswords.setModel(model)
         values = []
-        with open('vault.json') as json_f:
+        with open('.//src//server//vault.json') as json_f:
             data = json.load(json_f)
         for i in data:
             string = i['url'] + ':' + i['username'] + ':' + i['password']
