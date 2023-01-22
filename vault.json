@@ -1,7 +1,20 @@
 [
     {
-        "username": "asdfg",
+        "username": "rrucgnsu",
         "url": "http://lolz.com",
-        "password": "#$-hxV'+hHf*U}'[u;"
+        "password": "8gLxpqtM\"+$YL5,S0dlE<]<::EZEs0WU",
+        "password_entropy": 150.41407098051496
+    },
+    {
+        "username": "nprnwcks",
+        "url": "a",
+        "password": "2$SY>uo-z'MqIEz-nIm<^8J]D#=$R6MQ",
+        "password_entropy": 152.156400069231
+    },
+    {
+        "username": "qalbkjnf",
+        "url": "o",
+        "password": "HuabCeaFEQK",
+        "password_entropy": 36.541209043760986
     }
 ]
