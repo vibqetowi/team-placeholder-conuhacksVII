@@ -24,7 +24,7 @@ class User:
     def get_master_password(self): return self.master_password
 
     def update_master_password(self, new_master_password):
-        #TODO validate new master password 
+        # TODO validate new master password
         self.master_password = new_master_password
 
 
@@ -34,13 +34,12 @@ class User:
 # from mic recording.
 # I should have named this website or something but no it is a bit late to refactor
 class Website:
-# TODO: if duplicate url, do not create new password, but update password with new seed
+    # TODO: if duplicate url, do not create new password, but update password with new seed
 
-    plaintext_password = None #the actual password
+    plaintext_password = None  # the actual password
     entropy_bits = None
     website_url = None
     website_username = None
-
 
     def __init__(self, url: str, pwlen: int,
                  include_num: bool,
@@ -49,20 +48,19 @@ class Website:
                  include_special_char: bool):
 
         self.website_url = url
-        
+
         # username generated using url as seed
         f0 = Faker()
         Faker.seed(url)
         self.website_username = str(f0.sentence(
-            ext_word_list = lowercase_letters, nb_words=12).
+            ext_word_list=lowercase_letters, nb_words=12).
             replace(' ', ''))[:-1]
 
-        self.plaintext_password = set_password(url, pwlen,include_num,include_lowercase,
-                                                include_uppercase,include_special_char)
+        self.plaintext_password = set_password(url, pwlen, include_num, include_lowercase,
+                                               include_uppercase, include_special_char)
 
-        self.entropy_bits = compute_bit_entropy(pwlen, len(set(self.plaintext_password)))
-
-
+        self.entropy_bits = compute_bit_entropy(
+            pwlen, len(set(self.plaintext_password)))
 
     def get_plaintext_password(self): return self.plaintext_password
     def get_entropy(self): return self.entropy_bits
@@ -73,9 +71,8 @@ class Website:
 
         return hash(self.get_website_url)*hash_from_audio()
 
-
-    def set_password(self,pwlen: int,include_num: bool,include_lowercase: bool,
-                    include_uppercase: bool,include_special_char: bool):
+    def set_password(self, pwlen: int, include_num: bool, include_lowercase: bool,
+                     include_uppercase: bool, include_special_char: bool):
         # define characters used in password
         charset = []
         if include_lowercase:
@@ -93,35 +90,35 @@ class Website:
         # define the seed for the password as the site url + an audio clip captured by the mic
         Faker.seed(self.get_website_url())
 
-        return str(f0.sentence( ext_word_list=charset,
-                nb_words=pwlen*2).replace(' ', ''))[:-1]
+        return str(f0.sentence(ext_word_list=charset,
+                               nb_words=pwlen*2).replace(' ', ''))[:-1]
 
-        
+
 # bits of entropy in string = log2(unique characters ^ length of string)
 def compute_bit_entropy(string_length: int, charset_size: int) -> float:
     return math.log(charset_size**string_length, 2)
 
 
-# Record audio for 0.5 seconds with microphone to numpy array, then 
+# Record audio for 0.5 seconds with microphone to numpy array, then
 # sums it up and uses it as part of password seed
 def hash_from_audio() -> int:
 
-    RATE=16000
+    RATE = 16000
     RECORD_SECONDS = 0.5
     CHUNKSIZE = 1024
 
     # initialize portaudio
     p = pyaudio.PyAudio()
-    stream = p.open(format=pyaudio.paInt16, channels=1, 
-                    rate=RATE, input=True, 
+    stream = p.open(format=pyaudio.paInt16, channels=1,
+                    rate=RATE, input=True,
                     frames_per_buffer=CHUNKSIZE)
 
-    frames = [] # A python-list of chunks(np.ndarray)
+    frames = []  # A python-list of chunks(np.ndarray)
     for _ in range(0, int(RATE / CHUNKSIZE * RECORD_SECONDS)):
         data = stream.read(CHUNKSIZE)
         frames.append(np.frombuffer(data, dtype=np.int16))
 
-    #Convert the list of np-arrays into a 1D array (column-wise)
+    # Convert the list of np-arrays into a 1D array (column-wise)
     npdata = np.hstack(frames)
 
     # close stream
@@ -131,7 +128,6 @@ def hash_from_audio() -> int:
 
     x = prod(map(abs, npdata))
     return int(x)
-    
 
 
 if __name__ == "__main__":
@@ -139,8 +135,6 @@ if __name__ == "__main__":
     print(f'pw 0: {pw.get_plaintext_password()} entropy: {pw.get_entropy()}')
 
     pw.set_password
-
-
 
 
 # from faker import Faker
@@ -197,7 +191,7 @@ if __name__ == "__main__":
 #     print(Password("url", 10, True,True,True,True))
 #     print(Password("url", 5, True,False,False,False))
 
-# class Website: 
+# class Website:
 #     website_url = None
 #     website_username = None
 #     website_password = None

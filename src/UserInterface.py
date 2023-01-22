@@ -10,11 +10,14 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 import sys
 import cv2
 from backend.backend_code import *
+from to_json import *
+from qr_code import *
 
 class Ui_Widget(object):
     def setupUi(self, Widget):
         Widget.setObjectName("Widget")
         Widget.resize(684, 301)
+
         self.input_URL = QtWidgets.QLineEdit(Widget)
         self.input_URL.setGeometry(QtCore.QRect(110, 10, 291, 22))
         self.input_URL.setObjectName("input_URL")
@@ -35,13 +38,15 @@ class Ui_Widget(object):
         self.lable_Username = QtWidgets.QLabel(Widget)
         self.lable_Username.setGeometry(QtCore.QRect(20, 50, 58, 15))
         self.lable_Username.setObjectName("lable_Username")
-        self.input_username = QtWidgets.QLineEdit(Widget)
 
+        self.input_username = QtWidgets.QLineEdit(Widget)
         self.input_username.setGeometry(QtCore.QRect(110, 50, 281, 22))
         self.input_username.setObjectName("input_username")
+
         self.label_Include = QtWidgets.QLabel(Widget)
         self.label_Include.setGeometry(QtCore.QRect(40, 150, 58, 15))
         self.label_Include.setObjectName("label_Include")
+
         self.chkbx_Lowecase = QtWidgets.QCheckBox(Widget)
         self.chkbx_Lowecase.setGeometry(QtCore.QRect(40, 180, 83, 21))
         self.chkbx_Lowecase.setChecked(True)
@@ -58,6 +63,7 @@ class Ui_Widget(object):
         self.chkbx_specialChars.setGeometry(QtCore.QRect(40, 270, 141, 21))
         self.chkbx_specialChars.setChecked(True)
         self.chkbx_specialChars.setObjectName("chkbx_specialChars")
+
         self.label_3 = QtWidgets.QLabel(Widget)
         self.label_3.setGeometry(QtCore.QRect(190, 150, 81, 16))
         self.label_3.setObjectName("label_3")
@@ -76,9 +82,11 @@ class Ui_Widget(object):
         self.btn_generateQR.setGeometry(QtCore.QRect(460, 200, 121, 23))
         self.btn_generateQR.setObjectName("btn_generateQR")
         self.btn_generateQR.clicked.connect(self.genQRCode)
+
         self.list_paswords = QtWidgets.QListView(Widget)
         self.list_paswords.setGeometry(QtCore.QRect(410, 0, 256, 192))
         self.list_paswords.setObjectName("list_paswords")
+
         self.btn_TransferPasswords = QtWidgets.QPushButton(Widget)
         self.btn_TransferPasswords.setGeometry(QtCore.QRect(460, 230, 121, 23))
         self.btn_TransferPasswords.setObjectName("btn_TransferPasswords")
@@ -90,11 +98,20 @@ class Ui_Widget(object):
         #ADD THE CODE GENERATIO CODE
         pw = Website(self.input_URL.text(), int(self.input_Compexity.text()),self.chkbx_nubers.isChecked(),self.chkbx_Lowecase.isChecked(),self.chkbx_upercase.isChecked(),self.chkbx_specialChars.isChecked())
         us = User(self.input_masterPassword.text())
+        jv = JSONVault('vault.json')
+        jv.write_data(self.input_username.text(),self.input_URL.text(),pw.get_plaintext_password())
         print("btn clicked")
         self.label_generatedPassword.setText(pw.get_plaintext_password())
 
     def genQRCode(self, Widget):
-        img = cv2.imread("/tmp/qr.png", cv2.IMREAD_ANYCOLOR)
+        file_path = 'qr.png'
+        file_reader = JSONFileReader('vault.json')
+        json_str = file_reader.read_file()
+        qr_code = QR_Code(json_str)
+        qr_code.generate_qr_code(file_path)
+        print(json_str)
+
+        img = cv2.imread("qr.png", cv2.IMREAD_ANYCOLOR)
         
         cv2.imshow("QR", img)
         cv2.waitKey(0)

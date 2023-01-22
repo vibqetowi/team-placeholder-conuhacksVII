@@ -2,7 +2,7 @@ import qrcode
 import urllib.request
 from json_reader import JSONFileReader
 
-file_path = input("Enter the path: ")
+#file_path = input("Enter the path: ")
 
 class QR_Code:
     def __init__(self, data):
@@ -18,10 +18,10 @@ class QR_Code:
 
 
 # Example usage
-file_reader = JSONFileReader('vault.json')
-json_str = file_reader.read_file()
-qr_code = QR_Code(json_str)
-qr_code.generate_qr_code(file_path)
-print(json_str)
+#file_reader = JSONFileReader('vault.json')
+#json_str = file_reader.read_file()
+#qr_code = QR_Code(json_str)
+#qr_code.generate_qr_code(file_path)
+#print(json_str)
 
 
