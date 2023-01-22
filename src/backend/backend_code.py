@@ -29,7 +29,6 @@ class User:
     vault = None
 
     def __init__(self, master_password):
-        self.username = username
         self.master_password = master_password
         self.vault = []
 
@@ -92,7 +91,8 @@ class Password:
 def compute_bit_entropy(string_length: int, charset_size: int) -> float:
     return math.log(charset_size**string_length, 2)
 
-
+# Record audio for 0.5 seconds with microphone to numpy array, then 
+# sums it up and uses it as part of password seed
 def generate_numerical_value_from_audio_input() -> float:
 
     RATE=16000
@@ -118,6 +118,7 @@ def generate_numerical_value_from_audio_input() -> float:
     stream.close()
     p.terminate()
     
+
     x = sum(map(abs, npdata))
     # x = math.factorial(int(x))
     print(x)
