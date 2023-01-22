@@ -182,7 +182,7 @@ class Ui_Widget(object):
         for j in values:
             item = QtGui.QStandardItem(j)
             model.appendRow(item)
-        self.gridLayout.addWidget(self.list_paswords, 1, 0, 1, 2)
+        #self.gridLayout.addWidget(self.list_paswords, 1, 0, 1, 2)
         
 
     # changes the text on generate password btn to educate
