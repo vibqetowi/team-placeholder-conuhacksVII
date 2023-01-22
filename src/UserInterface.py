@@ -18,6 +18,7 @@ import pandas as pd
 import json
 import threading
 import socket
+from src.json_crypt import *
 
 
 
@@ -168,6 +169,7 @@ class Ui_Widget(object):
 
         self.provide_password_report(entropy)
         self.addJsonToList()
+        encrypt(master_password)
 
     def addJsonToList(self):
         model = QtGui.QStandardItemModel()
