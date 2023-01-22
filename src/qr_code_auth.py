@@ -1,4 +1,5 @@
 import qrcode
+import socket
 
 def generate_qr(data):
     qr = qrcode.QRCode(version=1, box_size=10, border=5)

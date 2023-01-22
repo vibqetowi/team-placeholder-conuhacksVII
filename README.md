@@ -2,7 +2,7 @@
 
 *Team Placeholder:*
 Bryan Andrianantenaina <br/>
-Enrique [] <br/>
+Enrique Calderon <br/>
 Minh Huynh <br/>
 Navjot Singh <br/>
 
