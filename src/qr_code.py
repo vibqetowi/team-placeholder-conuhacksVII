@@ -1,6 +1,6 @@
 import qrcode
 import urllib.request
-from json_reader import JSONFileReader
+from src.json_reader import JSONFileReader
 
 #file_path = input("Enter the path: ")
 

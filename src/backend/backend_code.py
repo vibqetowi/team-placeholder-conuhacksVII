@@ -82,6 +82,9 @@ class Website:
         if include_special_char:
             charset += special_characters
 
+        if charset == []:
+            self.plaintext_password = "Invalid Selection!"
+            return
         # create faker object
         f0 = Faker()
 
@@ -104,8 +107,7 @@ def generate_username(url):
     # username generated using url as seed
     f0 = Faker()
     Faker.seed(url)
-    return str(f0.sentence(ext_word_list=lowercase_letters +
-                           uppercase_letters, nb_words=10). replace(' ', ''))[:-1]
+    return str(f0.sentence(ext_word_list=lowercase_letters, nb_words=20).replace(' ', '').lower())[:8]
 
 
 # Record audio for 0.5 seconds with microphone to numpy array, then

@@ -9,9 +9,9 @@
 from PyQt6 import QtCore, QtGui, QtWidgets
 import sys
 import cv2
-from backend.backend_code import *
-from to_json import *
-from qr_code import *
+from src.backend.backend_code import *
+from src.to_json import *
+from src.qr_code import *
 import pandas as pd
 
 
@@ -85,17 +85,17 @@ class Ui_Widget(object):
         self.label_3.setGeometry(QtCore.QRect(190, 150, 81, 16))
         self.label_3.setObjectName("label_3")
 
-        self.input_Compexity = QtWidgets.QLineEdit(Widget)
-        self.input_Compexity.setGeometry(QtCore.QRect(270, 150, 41, 22))
-        self.input_Compexity.setObjectName("input_Compexity")
+        self.input_Length = QtWidgets.QLineEdit(Widget)
+        self.input_Length.setGeometry(QtCore.QRect(270, 150, 41, 22))
+        self.input_Length.setObjectName("input_Length")
 
         self.btn_generatePassword = QtWidgets.QPushButton(Widget)
-        self.btn_generatePassword.setGeometry(QtCore.QRect(220, 200, 121, 71))
+        self.btn_generatePassword.setGeometry(QtCore.QRect(220, 200, 200, 100))
         self.btn_generatePassword.setObjectName("btn_generatePassword")
         self.btn_generatePassword.clicked.connect(self.genPassword)
 
         self.btn_generateQR = QtWidgets.QPushButton(Widget)
-        self.btn_generateQR.setGeometry(QtCore.QRect(460, 200, 121, 23))
+        self.btn_generateQR.setGeometry(QtCore.QRect(460, 200, 150, 23))
         self.btn_generateQR.setObjectName("btn_generateQR")
         self.btn_generateQR.clicked.connect(self.genQRCode)
 
@@ -116,11 +116,19 @@ class Ui_Widget(object):
         url = self.input_URL.text()
 
         # ADD THE CODE GENERATIO CODE
-        wb = Website(url, int(self.input_Compexity.text()), self.chkbx_nubers.isChecked(
+        wb = Website(url, int(self.input_Length.text()), self.chkbx_nubers.isChecked(
         ), self.chkbx_Lowecase.isChecked(), self.chkbx_upercase.isChecked(), self.chkbx_specialChars.isChecked())
         us = User(self.input_masterPassword.text())
+        entropy = wb.get_entropy()
 
-        # update website username
+        if wb.get_plaintext_password().equals("Invalid Selection!"):
+            # shames the user for being stupid and not selecting a checkbox properly
+            self.btn_generatePassword.setText('Check At Least One Box\nShame On You\nTry Again >:(')
+            return
+              
+
+        # update website username, if user did not put username
+        # generate one
         if not self.input_username.text():
             self.input_username.setText(generate_username(url))
         wb.set_username(self.input_username.text())
@@ -129,8 +137,23 @@ class Ui_Widget(object):
 
         jv = JSONVault('vault.json')
         jv.write_data(self.input_username.text(), url,
-                      wb.get_plaintext_password())
+                      wb.get_plaintext_password(), entropy)
         print("website saved")
+        
+        self.provide_password_report(entropy)
+
+    # changes the text on generate password btn to educate
+    # the user on the strength of the password
+    def provide_password_report(self, entropy):
+        
+        password_strength = ''
+        if entropy < 60: password_strength = 'weak'
+        elif entropy < 100: password_strength = 'medium'
+        else: password_strength = 'strong'
+
+        self.btn_generatePassword.setText(
+            f'Password entropy: {int(entropy)} bits \nThis Password is {password_strength} \nClick to generate another')
+
 
     def genQRCode(self, Widget):
         file_path = 'qr.png'
@@ -159,14 +182,13 @@ class Ui_Widget(object):
         self.chkbx_nubers.setText(_translate("Widget", "numbers"))
         self.chkbx_specialChars.setText(
             _translate("Widget", "specialCharacters"))
-        self.label_3.setText(_translate("Widget", "Complexity"))
-        self.input_Compexity.setText(_translate("Widget", "32"))
-        self.btn_generatePassword.setText(_translate("Widget", "Generate "))
+        self.label_3.setText(_translate("Widget", "Length"))
+        self.input_Length.setText(_translate("Widget", "32"))
+        self.btn_generatePassword.setText(_translate("Widget", "Generate Password"))
         self.btn_generateQR.setText(_translate("Widget", "Generate QR"))
         self.btn_TransferPasswords.setText(_translate("Widget", "Run Server"))
 
-
-if __name__ == "__main__":
+def main():
     import sys
     app = QtWidgets.QApplication(sys.argv)
     Widget = QtWidgets.QWidget()
@@ -174,3 +196,6 @@ if __name__ == "__main__":
     ui.setupUi(Widget)
     Widget.show()
     sys.exit(app.exec())
+
+if __name__ == "__main__":
+    main()
