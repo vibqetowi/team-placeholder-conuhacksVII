@@ -12,7 +12,11 @@ import cv2
 from src.backend.backend_code import *
 from src.to_json import *
 from src.server.qr_code import *
+from src.server.httpserver import *
 import pandas as pd
+import json
+import threading
+
 
 
 class Ui_Widget(object):
@@ -102,10 +106,13 @@ class Ui_Widget(object):
         self.list_paswords = QtWidgets.QListView(Widget)
         self.list_paswords.setGeometry(QtCore.QRect(410, 0, 256, 192))
         self.list_paswords.setObjectName("list_paswords")
+        model = QtGui.QStandardItemModel()
+        self.list_paswords.setModel(model)
 
         self.btn_TransferPasswords = QtWidgets.QPushButton(Widget)
         self.btn_TransferPasswords.setGeometry(QtCore.QRect(460, 230, 121, 44))
         self.btn_TransferPasswords.setObjectName("btn_TransferPasswords")
+        self.btn_TransferPasswords.clicked.connect(self.exportPasswords)
 
         self.retranslateUi(Widget)
         QtCore.QMetaObject.connectSlotsByName(Widget)
@@ -158,7 +165,27 @@ class Ui_Widget(object):
         print("website saved")
 
         self.provide_password_report(entropy)
+<<<<<<< HEAD
+        self.addJsonToList()
 
+    def addJsonToList(self):
+        model = QtGui.QStandardItemModel()
+        self.list_paswords.setModel(model)
+        values = []
+        with open('vault.json') as json_f:
+            data = json.load(json_f)
+        for i in data:
+            string = i['url'] + ':' + i['username'] + ':' + i['password']
+            values.append(string)
+            #print(string) 
+        for j in values:
+            item = QtGui.QStandardItem(j)
+            model.appendRow(item)
+        self.gridLayout.addWidget(self.list_paswords, 1, 0, 1, 2)
+        
+=======
+
+>>>>>>> 79579f4bd8cb75128d8ce2dea2563a92ecffafb7
     # changes the text on generate password btn to educate
     # the user on the strength of the password
 
@@ -189,6 +216,12 @@ class Ui_Widget(object):
 
     #     cv2.imshow("QR", img)
     #     cv2.waitKey(0)
+    def exportPasswords(self):
+        httpd = HTTPServer(('',80),MyHandler)
+        stop_server = threading.Timer(60.0,httpd.shutdown)
+        stop_server.start()
+
+        httpd.serve_forever()
 
     def retranslateUi(self, Widget):
         _translate = QtCore.QCoreApplication.translate
